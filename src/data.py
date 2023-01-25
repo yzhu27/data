@@ -12,6 +12,7 @@
 import math
 import re
 import sys
+import csv
 
 
 the = {}
@@ -68,14 +69,14 @@ class SYM:
                 self.mode = x
 
     # line 47 function SYM.mid(i,x)
-    def mid(self):
+    def mid(self, *x):
         #here 'mid' stands for mode
         return self.mode
 
     # line 48 functon SYM.div(i,x,  fun, e)
     # fun() here should be an anonymous funciton
     #return the entropy
-    def div(self):
+    def div(self, *x):
         e = 0
         for key in self.has:
             p = self.has[key] / self.n
@@ -84,7 +85,7 @@ class SYM:
         
         return -e
     
-    def rnd(self, x):
+    def rnd(self, x, *n):
         return x
     
 #line 53
@@ -101,11 +102,14 @@ class NUM:
         
         self.lo = math.inf # lowest value, initially set as MAX
         self.hi = -math.inf # highest value, initially set as MIN
-        if self.txt=="":
+        if txt=="":
             self.w = -1
-        elif self.txt[-1]=="-":
+        elif txt[-1]=="-":
+            print("here is -1 in "+str(self.txt)+" at "+str(self.at))
             self.w = -1
-        else: self.w = 1
+        else: 
+            print("here is 1 in "+str(self.txt)+" at "+str(self.at))
+            self.w = 1
     # line 59 function NUM.add(i,x)
     # add `n`, update lo,hi and stuff needed for standard deviation
     def add(self, n):
@@ -121,13 +125,13 @@ class NUM:
             self.hi = max(self.hi, n)
 
     # line 68 function NUM.mid(i,x)
-    def mid(self):
+    def mid(self, *x):
         #here 'mid' stands for mean
         return self.mu
 
     # line 69 functon NUM.div(i,x)
     # return standard deviation using Welford's algorithm
-    def div(self):
+    def div(self, *x):
         if(self.m2 < 0 or self.n <2):
             return 0
         else:
@@ -170,16 +174,15 @@ class COLS:
                 # if a column name ends with a '!', this column should be recorded AS self.klass
                 # NOTICE THAT IT IS "AS", NOT "INCLUDED IN"
                 if name[-1] == "!":
-                    self.klass = name
+                    self.klass = curCol
 
     def add(self, row):
         for _,t in self.y.items():
-            print(oo(t))
-            for _, col in t:
-                col.add(row.cells[col.at])
+            t.add(row.cells[t.at])
+
+                
         for _,t in self.x.items():
-            for _, col in t:
-                col.add(row.cells[col.at])
+            t.add(row.cells[t.at])
 
 
 class ROW:
@@ -321,18 +324,19 @@ def coerce(s):
     
 
 def Csv(fname, fun):
-    import csv
+    
     #src = open(fname)
+    n=0
     with open(fname,'r') as src:
         rdr = csv.reader(src, delimiter=',')
         for l in rdr:
             d={}
             for v in l:
                 d[len(d)]=coerce(v)
+            n+=len(d)
             #print(type(d))
             fun(d)
-
-    
+    return n
 
 ### Main
 
@@ -405,7 +409,7 @@ def eg(key, str, fun):  #--> nil; register an example.
 
 
 if __name__=='__main__':
-    
+    the = settings(help)
     # eg("crash","show crashing behavior", function()
     #   return the.some.missing.nested.field end)
     def thefun():
@@ -427,30 +431,30 @@ if __name__=='__main__':
         return 11/7 == num.mid() and 0.787 == rnd(num.div())
     eg("num", "check nums", numfun)
     
-    # def csvfun(n):
-    #     #global the
-    #     n = 0
-    #     def tmp(t):
-    #         return len(t)
-    #     #print(the)
-    #     Csv(the["file"], tmp(n))
-    #     return n==8*399
-    # n=0
-    # eg("csv","read from csv", csvfun(n))
+    def csvfun():
+        #global the
+        n = 0
+        def tmp(t):
+            return len(t)
+        #print(the)
+        n = Csv(the["file"], tmp)
+        return n==8*399
+    eg("csv","read from csv", csvfun)
 
     def datafun():
         data = DATA(the["file"])
+        print(data.cols.x[0].at)
         return len(data.rows) == 398 &\
-               data.cols.y[1].w == -1 &\
-               data.cols.x[1].at == 1 &\
+               data.cols.y[2].w == -1 &\
+               data.cols.x[0].at == 1 &\
                len(data.cols.x == 4)
     eg("data","read DATA csv", datafun)
 
     def statsfun():
         data = DATA(the["file"])
         for k, cols in enumerate((data.cols.y, data.cols.x)):
-            print(k, "mid", o(data.stats("mid", cols, 2)))
-            print("", "div". o(data.stats("div", cols, 2)))
+            print(str(k)+ " mid "+ o(data.stats("mid", cols, 2)))
+            print(""+ " div "+ o(data.stats("div", cols, 2)))
         return True
     eg("stats","stats from DATA", statsfun)
 
