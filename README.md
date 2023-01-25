@@ -25,13 +25,9 @@ Some functions:
 And some test examples (eg)
 
 ## Result:
-* [Expected result](https://github.com/timm/tested/blob/main/etc/out/data.out):
+* [Expected result](https://github.com/timm/tested/blob/main/etc/out/data.out)
 
-![result img](./ex_result.png)
-
-* Result:
-
-![result img](./result.png)
+* [Our result](https://github.com/yzhu27/data/blob/main/etc/out/data.out)
 
 
 ## Contributors:
