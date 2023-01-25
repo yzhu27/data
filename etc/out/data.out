@@ -1,0 +1,11 @@
+{:dump False :file ../etc/data/auto93.csv :go all :help False :seed 937162211}
+✅ pass: the
+✅ pass: sym
+✅ pass: num
+✅ pass: csv
+✅ pass: data
+y	mid	{:Acc+ 15.57 :Lbs- 2970.42 :Mpg+ 23.84}
+	div	{:Acc+ 2.76 :Lbs- 846.84 :Mpg+ 8.34}
+x	mid	{:Clndrs 5.45 :Model 76.01 :Volume 193.43 :origin 1}
+	div	{:Clndrs 1.7 :Model 3.7 :Volume 104.27 :origin 1.3273558482394003}
+✅ pass: stats
