@@ -12,5 +12,5 @@ jobs:
         python-version: 3.8
     - name: test
       run: cd src;
-    - run: python3 -u ./data.py -g all > ../etc/out/data.out
+           python3 -u ./data.py -g all > ../etc/out/data.out
     - run: grep -q fail ../etc/out/data.out &&  exit -1 || echo "This job's status is success."
