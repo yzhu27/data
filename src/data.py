@@ -145,7 +145,7 @@ class COLS:
     def __init__(self, names):
         self.names = names
         self.all = {}
-        self.klass = {}
+        self.klass = None
         self.x = {}
         self.y = {}
         
@@ -165,7 +165,9 @@ class COLS:
             # if there is any '+' or '-', the column should be regarded as a dependent variable
             # all dependent variables should be recoreded in self.y
             # on the contrary, those independent variables should be recorded in self.x
-            if name[-1] != ":":
+            if name[-1] != "X":
+                if name [-1] == '!':
+                    self.klass = curCol
                 if "+" in name or "-" in name:
                     push(self.y, curCol)
                 else:
@@ -173,8 +175,6 @@ class COLS:
                 
                 # if a column name ends with a '!', this column should be recorded AS self.klass
                 # NOTICE THAT IT IS "AS", NOT "INCLUDED IN"
-                if name[-1] == "!":
-                    self.klass = curCol
 
     def add(self, row):
         for _,t in self.y.items():
@@ -205,10 +205,7 @@ class DATA:
     
     def add(self , t):
         if self.cols:
-            if t.__class__.__name__=="ROW":
-                t = t.cells
-            else: t = ROW(t)
-            #t = t.cells and t or ROW(t)
+            t = t if type(t) == ROW else ROW(t)
             push(self.rows , t)
             self.cols.add(t) #COLS.add()
         else:
@@ -220,7 +217,11 @@ class DATA:
                 return col.rnd(col.div(col) , nPlaces) , col.txt
             else:
                 return col.rnd(col.mid(col) , nPlaces) , col.txt
-        return kap(cols or self.cols.y , fun)
+        u = {}
+        for i in range(len(cols)):
+            k = cols[i].txt
+            u[k] = fun(k , cols[i])
+        return u
 
         
 
@@ -445,16 +446,19 @@ if __name__=='__main__':
         data = DATA(the["file"])
         print(data.cols.x[0].at)
         return len(data.rows) == 398 &\
-               data.cols.y[2].w == -1 &\
-               data.cols.x[0].at == 1 &\
+               data.cols.y[0].w == -1 &\
+               data.cols.x[0].at == 0 &\
                len(data.cols.x == 4)
     eg("data","read DATA csv", datafun)
 
     def statsfun():
         data = DATA(the["file"])
-        for k, cols in enumerate((data.cols.y, data.cols.x)):
-            print(str(k)+ " mid "+ o(data.stats("mid", cols, 2)))
-            print(""+ " div "+ o(data.stats("div", cols, 2)))
+        #print(data.cols.x[0]) # --> NUM
+        print('x' + "\tmid\t"+ o(data.stats("mid", data.cols.x, 2)))
+        print("\tdiv\t"+ o(data.stats("div", data.cols.x, 2)))
+
+        print('y' + "\tmid\t"+ o(data.stats("mid", data.cols.y, 2)))
+        print("\tdiv\t"+ o(data.stats("div", data.cols.y, 2)))
         return True
     eg("stats","stats from DATA", statsfun)
 
