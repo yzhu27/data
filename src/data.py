@@ -105,10 +105,10 @@ class NUM:
         if txt=="":
             self.w = -1
         elif txt[-1]=="-":
-            print("here is -1 in "+str(self.txt)+" at "+str(self.at))
+            #print("here is -1 in "+str(self.txt)+" at "+str(self.at))
             self.w = -1
         else: 
-            print("here is 1 in "+str(self.txt)+" at "+str(self.at))
+            #print("here is 1 in "+str(self.txt)+" at "+str(self.at))
             self.w = 1
     # line 59 function NUM.add(i,x)
     # add `n`, update lo,hi and stuff needed for standard deviation
@@ -214,14 +214,17 @@ class DATA:
     def stats(self , what , cols , nPlaces):
         def fun(k , col):
             if what == 'div':
-                return col.rnd(col.div(col) , nPlaces) , col.txt
+                return col.rnd(col.div(col) , nPlaces)
             else:
-                return col.rnd(col.mid(col) , nPlaces) , col.txt
+                return col.rnd(col.mid(col) , nPlaces)
         u = {}
         for i in range(len(cols)):
             k = cols[i].txt
             u[k] = fun(k , cols[i])
-        return u
+        res = {}
+        for k in sorted(u.keys()):
+            res[k] = u[k]
+        return res
 
         
 
@@ -299,10 +302,21 @@ def o(t , *isKeys): #--> s; convert `t` to a string. sort named keys.
         return str(t)
     
     def fun(k , v):
-        if not re.findall('[^_]' , k):
+        if not re.findall('[^_]' , str(k)):
             return fmt(":%s %s",o(k),o(v))
     
-    return ' '.join([str(len(t) > 0) and str(not isKeys) and str(map(t , o)) or str(sort(kap(t , fun)))])
+    if len(t) > 0 and not isKeys:
+        tmp = map(t , o)
+    else:
+        tmp = sort(kap(t , fun))
+
+    def concat(tmp:dict):
+        res = []
+        for k , v in tmp.items():
+            res.append(':' + k)
+            res.append(v)
+        return res
+    return '{' + ' '.join(concat(tmp)) + '}'
 
 def oo(t):
     print(o(t))
@@ -405,12 +419,14 @@ egs = {}
 def eg(key, str, fun):  #--> nil; register an example.
     global help
     egs[key] = fun
-    help = help + f'  -g  {key}\t{str}\n'
+    #help = help + f'  -g  {key}\t{str}\n'
+    help = help + fmt('  -g  %s\t%s\n', key, str)
+
 
 
 
 if __name__=='__main__':
-    the = settings(help)
+    #the = settings(help)
     # eg("crash","show crashing behavior", function()
     #   return the.some.missing.nested.field end)
     def thefun():
@@ -444,21 +460,18 @@ if __name__=='__main__':
 
     def datafun():
         data = DATA(the["file"])
-        print(data.cols.x[0].at)
-        return len(data.rows) == 398 &\
-               data.cols.y[0].w == -1 &\
-               data.cols.x[0].at == 0 &\
-               len(data.cols.x == 4)
+        #print(len(data.rows),data.cols.y[0].w,data.cols.x[0].at,len(data.cols.x))
+        return len(data.rows) == 398 and data.cols.y[0].w == -1 and data.cols.x[0].at == 0 and len(data.cols.x) == 4
     eg("data","read DATA csv", datafun)
 
     def statsfun():
         data = DATA(the["file"])
         #print(data.cols.x[0]) # --> NUM
-        print('x' + "\tmid\t"+ o(data.stats("mid", data.cols.x, 2)))
-        print("\tdiv\t"+ o(data.stats("div", data.cols.x, 2)))
-
         print('y' + "\tmid\t"+ o(data.stats("mid", data.cols.y, 2)))
         print("\tdiv\t"+ o(data.stats("div", data.cols.y, 2)))
+
+        print('x' + "\tmid\t"+ o(data.stats("mid", data.cols.x, 2)))
+        print("\tdiv\t"+ o(data.stats("div", data.cols.x, 2)))
         return True
     eg("stats","stats from DATA", statsfun)
 
