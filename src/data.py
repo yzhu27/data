@@ -105,10 +105,8 @@ class NUM:
         if txt=="":
             self.w = -1
         elif txt[-1]=="-":
-            #print("here is -1 in "+str(self.txt)+" at "+str(self.at))
             self.w = -1
         else: 
-            print("here is 1 in "+str(self.txt)+" at "+str(self.at))
             self.w = 1
     # line 59 function NUM.add(i,x)
     # add `n`, update lo,hi and stuff needed for standard deviation
@@ -339,8 +337,6 @@ def coerce(s):
     
 
 def Csv(fname, fun):
-    
-    #src = open(fname)
     n=0
     with open(fname,'r') as src:
         rdr = csv.reader(src, delimiter=',')
@@ -349,7 +345,6 @@ def Csv(fname, fun):
             for v in l:
                 d[len(d)]=coerce(v)
             n+=len(d)
-            #print(type(d))
             fun(d)
     return n
 
@@ -426,7 +421,7 @@ def eg(key, str, fun):  #--> nil; register an example.
 
 
 if __name__=='__main__':
-    #the = settings(help)
+
     # eg("crash","show crashing behavior", function()
     #   return the.some.missing.nested.field end)
     def thefun():
@@ -449,11 +444,9 @@ if __name__=='__main__':
     eg("num", "check nums", numfun)
     
     def csvfun():
-        #global the
         n = 0
         def tmp(t):
             return len(t)
-        #print(the)
         n = Csv(the["file"], tmp)
         return n==8*399
     eg("csv","read from csv", csvfun)
@@ -463,15 +456,14 @@ if __name__=='__main__':
         return len(data.rows) == 398 and\
                data.cols.y[0].w == -1 and\
                data.cols.x[0].at == 0 and\
-               len(data.cols.x) == 4   #second & third line should be [0]s 
-                                       #instead of the [1]s in lua and third
+               len(data.cols.x) == 4   # second & third line should be [0]s 
+                                       # instead of the [1]s in lua and third
                                        # line should be 0 because python
                                        # is 0 index and lua is 1 index
     eg("data","read DATA csv", datafun)
 
     def statsfun():
         data = DATA(the["file"])
-        #print(data.cols.x[0]) # --> NUM
         print('y' + "\tmid\t"+ o(data.stats("mid", data.cols.y, 2)))
         print("\tdiv\t"+ o(data.stats("div", data.cols.y, 2)))
 

@@ -88,7 +88,7 @@ function COLS.new(i,t,     col,cols) --> COLS; generate NUMs and SYMs from colum
   for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
     col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
     push(i.all, col)
-    if not s:find":$" then
+    if not s:find"X$" then
       if s:find"!$" then i.klass = col end
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 
