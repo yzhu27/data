@@ -105,10 +105,10 @@ class NUM:
         if txt=="":
             self.w = -1
         elif txt[-1]=="-":
-            print("here is -1 in "+str(self.txt)+" at "+str(self.at))
+            #print("here is -1 in "+str(self.txt)+" at "+str(self.at))
             self.w = -1
         else: 
-            print("here is 1 in "+str(self.txt)+" at "+str(self.at))
+            #print("here is 1 in "+str(self.txt)+" at "+str(self.at))
             self.w = 1
     # line 59 function NUM.add(i,x)
     # add `n`, update lo,hi and stuff needed for standard deviation
@@ -443,11 +443,13 @@ if __name__=='__main__':
 
     def datafun():
         data = DATA(the["file"])
-        print(data.cols.x[0].at)
-        return len(data.rows) == 398 &\
-               data.cols.y[2].w == -1 &\
-               data.cols.x[0].at == 1 &\
-               len(data.cols.x == 4)
+        return len(data.rows) == 398 and\
+               data.cols.y[0].w == -1 and\
+               data.cols.x[0].at == 0 and\
+               len(data.cols.x) == 4   #second & third line should be [0]s 
+                                       #instead of the [1]s in lua and third
+                                       # line should be 0 because python
+                                       # is 0 index and lua is 1 index
     eg("data","read DATA csv", datafun)
 
     def statsfun():

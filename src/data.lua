@@ -95,10 +95,7 @@ function COLS.new(i,t,     col,cols) --> COLS; generate NUMs and SYMs from colum
 function COLS.add(i,row) --> nil; update the (not skipped) columns with details from `row`
   
   for _,t in pairs({i.x,i.y}) do 
-    print('----------------------')
-    print(oo(t))
     for _,col in pairs(t) do
-      print(oo(col))
       col:add(row.cells[col.at]) end end end
 
 -- ### ROW
